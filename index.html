@@ -54,14 +54,24 @@
             font-size: 12px;
             color: #94a3b8;
         }
+        .language-switcher { position: absolute; top: 28px; right: 20px; display: inline-flex; overflow: hidden; border: 1px solid var(--border); border-radius: 8px; background: #fff; }
+        .language-button { width: auto; padding: 7px 10px; border: 0; border-right: 1px solid var(--border); background: #fff; color: #64748b; font-size: 12px; font-weight: 700; cursor: pointer; }
+        .language-button:last-child { border-right: 0; }
+        .language-button[aria-pressed="true"] { background: var(--accent); color: #fff; }
+        .language-button:focus-visible { outline: 2px solid var(--primary); outline-offset: -2px; }
+        @media (max-width: 640px) { body { padding: 28px 12px; } .language-switcher { top: 16px; right: 12px; } header { padding-right: 80px; } .card { padding: 20px; } }
     </style>
 </head>
 <body>
 
 <div class="container">
+    <div class="language-switcher" role="group" aria-label="Language selector" data-i18n-aria-label="languageSelector">
+        <button class="language-button" type="button" data-language="zh" aria-pressed="true" aria-label="切换到中文">中文</button>
+        <button class="language-button" type="button" data-language="en" aria-pressed="false" aria-label="Switch to English">EN</button>
+    </div>
     <header>
-        <h1>🧬 qRT-PCR 统计分析专家系统 v6.5</h1>
-        <p>专业绘图 · T-test 检验 · 智能异常检测 (n>2)</p>
+        <h1 data-i18n="title">🧬 qRT-PCR 统计分析专家系统 v6.5</h1>
+        <p data-i18n="subtitle">专业绘图 · T-test 检验 · 智能异常检测 (n&gt;2)</p>
     </header>
 
     <div id="alert-panel"></div>
@@ -69,38 +79,38 @@
     <div class="card">
         <div class="upload-box" id="drop-zone">
             <div style="font-size: 40px;">📂</div>
-            <p>上传 Excel 数据文件</p>
+            <p data-i18n="uploadExcel">上传 Excel 数据文件</p>
             <input type="file" id="file-input" class="hidden" accept=".xlsx, .xls">
         </div>
     </div>
 
     <div id="config-section" class="card hidden">
-        <h3>1. 参数映射</h3>
+        <h3 data-i18n="parameterMapping">1. 参数映射</h3>
         <div class="config-grid">
-            <div><label>样本列</label><select id="col-sample"></select></div>
-            <div><label>基因列</label><select id="col-gene"></select></div>
-            <div><label>Ct 值列</label><select id="col-ct"></select></div>
+            <div><label data-i18n="sampleColumn">样本列</label><select id="col-sample"></select></div>
+            <div><label data-i18n="geneColumn">基因列</label><select id="col-gene"></select></div>
+            <div><label data-i18n="ctColumn">Ct 值列</label><select id="col-ct"></select></div>
         </div>
         <div class="config-grid">
-            <div><label>内参基因 (多选)</label><select id="select-ref" multiple></select></div>
-            <div><label>对照组 (Control)</label><select id="select-control"></select></div>
-            <div><label>待分析样本</label><select id="select-target-samples" multiple></select></div>
+            <div><label data-i18n="referenceGenes">内参基因 (多选)</label><select id="select-ref" multiple></select></div>
+            <div><label data-i18n="controlGroup">对照组 (Control)</label><select id="select-control"></select></div>
+            <div><label data-i18n="samplesToAnalyze">待分析样本</label><select id="select-target-samples" multiple></select></div>
         </div>
         <div class="highlight-box">
             <div class="config-grid" style="align-items: center; margin: 0;">
-                <div><label>图表分组</label><select id="axis-toggle"><option value="sample">按样本分组</option><option value="gene">按基因分组</option></select></div>
-                <div><label>Ct SD 预警阈值</label><input type="number" id="sd-threshold" value="0.5" step="0.1"></div>
-                <button class="btn-main" onclick="processData()">🚀 执行统计分析</button>
+                <div><label data-i18n="chartGrouping">图表分组</label><select id="axis-toggle"><option value="sample" data-i18n="groupBySample">按样本分组</option><option value="gene" data-i18n="groupByGene">按基因分组</option></select></div>
+                <div><label data-i18n="ctSdThreshold">Ct SD 预警阈值</label><input type="number" id="sd-threshold" value="0.5" step="0.1"></div>
+                <button class="btn-main" data-i18n="runAnalysis" onclick="processData()">🚀 执行统计分析</button>
             </div>
         </div>
     </div>
 
     <div id="result-section" class="card hidden">
         <div style="display: flex; justify-content: space-between; align-items: center;">
-            <h3 style="border:none; margin:0;">2. 分析报表</h3>
+            <h3 style="border:none; margin:0;" data-i18n="analysisReport">2. 分析报表</h3>
             <div style="display: flex; gap: 10px;">
-                <button style="width:auto; padding:8px 15px; cursor:pointer;" onclick="exportCSV()">📄 导出 CSV</button>
-                <button class="btn-main" style="width:auto; background:var(--success); padding:8px 20px;" onclick="downloadChart()">🖼️ 下载图表</button>
+                <button style="width:auto; padding:8px 15px; cursor:pointer;" data-i18n="exportCsv" onclick="exportCSV()">📄 导出 CSV</button>
+                <button class="btn-main" style="width:auto; background:var(--success); padding:8px 20px;" data-i18n="downloadChart" onclick="downloadChart()">🖼️ 下载图表</button>
             </div>
         </div>
         <div class="chart-wrapper">
@@ -110,7 +120,7 @@
             <table id="res-table">
                 <thead>
                     <tr>
-                        <th>样本</th><th>基因</th><th>原始 Ct 序列</th><th>Ct SD</th><th>Fold Change</th><th>FC SD</th><th>P-value</th><th>显著性</th>
+                        <th data-i18n="sample">样本</th><th data-i18n="gene">基因</th><th data-i18n="rawCtValues">原始 Ct 序列</th><th>Ct SD</th><th>Fold Change</th><th>FC SD</th><th>P-value</th><th data-i18n="significance">显著性</th>
                     </tr>
                 </thead>
                 <tbody></tbody>
@@ -123,9 +133,68 @@
 </div>
 
 <script>
+    const translations = {
+        zh: {
+            languageSelector: '语言选择', title: '🧬 qRT-PCR 统计分析专家系统 v6.5', subtitle: '专业绘图 · T-test 检验 · 智能异常检测 (n>2)',
+            uploadExcel: '上传 Excel 数据文件', parameterMapping: '1. 参数映射', sampleColumn: '样本列', geneColumn: '基因列', ctColumn: 'Ct 值列',
+            referenceGenes: '内参基因 (多选)', controlGroup: '对照组 (Control)', samplesToAnalyze: '待分析样本', chartGrouping: '图表分组',
+            groupBySample: '按样本分组', groupByGene: '按基因分组', ctSdThreshold: 'Ct SD 预警阈值', runAnalysis: '🚀 执行统计分析',
+            analysisReport: '2. 分析报表', exportCsv: '📄 导出 CSV', downloadChart: '🖼️ 下载图表', sample: '样本', gene: '基因', rawCtValues: '原始 Ct 序列', significance: '显著性',
+            selectReferenceGenes: '请选择内参基因', referenceGene: '内参', highVariation: '变异大',
+            refVariationWarning: (samples, threshold) => `⚠️ 警告：样本 [${samples}] 的内参变异大 (n>2, SD>${threshold})。`,
+            replicateWarning: (count) => `ℹ️ 提示：检测到 ${count} 组平行孔存在离群风险 (n>2)。`, validationPassed: '✅ 验证通过：数据一致性良好或重复孔数量不足以判定离群。',
+            pageTitle: 'qRT-PCR 统计分析专家系统 v6.5'
+        },
+        en: {
+            languageSelector: 'Language selector', title: '🧬 qRT-PCR Statistical Analysis System v6.5', subtitle: "Publication-ready plots · Student's t-test · Replicate-quality screening (n > 2)",
+            uploadExcel: 'Upload an Excel data file', parameterMapping: '1. Map Parameters', sampleColumn: 'Sample column', geneColumn: 'Gene column', ctColumn: 'Ct column',
+            referenceGenes: 'Reference genes (select one or more)', controlGroup: 'Control group', samplesToAnalyze: 'Samples to analyze', chartGrouping: 'Chart grouping',
+            groupBySample: 'Group by sample', groupByGene: 'Group by gene', ctSdThreshold: 'Ct SD warning threshold', runAnalysis: '🚀 Run Statistical Analysis',
+            analysisReport: '2. Analysis Report', exportCsv: '📄 Export CSV', downloadChart: '🖼️ Download Chart', sample: 'Sample', gene: 'Gene', rawCtValues: 'Raw Ct values', significance: 'Significance',
+            selectReferenceGenes: 'Select at least one reference gene', referenceGene: 'Reference', highVariation: 'High variation',
+            refVariationWarning: (samples, threshold) => `⚠️ Warning: reference-gene variation is high for sample(s) [${samples}] (n > 2, SD > ${threshold}).`,
+            replicateWarning: (count) => `ℹ️ Notice: ${count} technical-replicate group(s) have a potential outlier risk (n > 2).`, validationPassed: '✅ Quality check passed: data are consistent, or there are insufficient replicates to assess outliers.',
+            pageTitle: 'qRT-PCR Statistical Analysis System v6.5'
+        }
+    };
+    const languageStorageKey = 'qrt-pcr-language';
+    let currentLanguage = 'zh';
+
+    function getInitialLanguage() {
+        const requested = new URLSearchParams(window.location.search).get('lang');
+        if (requested === 'zh' || requested === 'en') return requested;
+        try { const stored = localStorage.getItem(languageStorageKey); if (stored === 'zh' || stored === 'en') return stored; } catch (error) {}
+        return 'zh';
+    }
+
+    function setLanguage(language, { updateUrl = true } = {}) {
+        if (!translations[language]) return;
+        currentLanguage = language;
+        const copy = translations[language];
+        document.documentElement.lang = language === 'en' ? 'en' : 'zh-CN';
+        document.title = copy.pageTitle;
+        document.querySelectorAll('[data-i18n]').forEach(element => { if (copy[element.dataset.i18n]) element.textContent = copy[element.dataset.i18n]; });
+        document.querySelectorAll('[data-i18n-aria-label]').forEach(element => { if (copy[element.dataset.i18nAriaLabel]) element.setAttribute('aria-label', copy[element.dataset.i18nAriaLabel]); });
+        document.querySelectorAll('[data-language]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.language === language)));
+        try { localStorage.setItem(languageStorageKey, language); } catch (error) {}
+        if (updateUrl) {
+            const url = new URL(window.location.href);
+            if (language === 'en') url.searchParams.set('lang', 'en'); else url.searchParams.delete('lang');
+            history.replaceState({}, '', url);
+        }
+        if (finalStats.length) {
+            const refGenes = Array.from(document.getElementById('select-ref').selectedOptions).map(option => option.value);
+            const samples = Array.from(document.getElementById('select-target-samples').selectedOptions).map(option => option.value);
+            renderUI(samples, [...new Set(finalStats.map(item => item.gene))].filter(gene => !refGenes.includes(gene)), document.getElementById('axis-toggle').value);
+        }
+    }
+
     let rawData = [];
     let chartObj = null;
     let finalStats = [];
+
+    document.querySelectorAll('[data-language]').forEach(button => button.addEventListener('click', () => setLanguage(button.dataset.language)));
+    setLanguage(getInitialLanguage(), { updateUrl: false });
 
     // --- T-test 统计逻辑 ---
     function calculateTTest(groupA, groupB) {
@@ -215,7 +284,7 @@
         const axisType = document.getElementById('axis-toggle').value;
         const sdThreshold = parseFloat(document.getElementById('sd-threshold').value) || 0.5;
 
-        if(!refGenes.length) return alert("请选择内参基因");
+        if(!refGenes.length) return alert(translations[currentLanguage].selectReferenceGenes);
 
         const sampleRefAvg = {};
         const refOutlierSamples = [];
@@ -268,15 +337,15 @@
 
         const alertPanel = document.getElementById('alert-panel');
         if (refOutlierSamples.length > 0) {
-            alertPanel.innerHTML = `⚠️ 警告：样本 [${refOutlierSamples.join(', ')}] 的内参变异大 (n>2, SD>${sdThreshold})。`;
+            alertPanel.innerHTML = translations[currentLanguage].refVariationWarning(refOutlierSamples.join(', '), sdThreshold);
             alertPanel.className = 'alert-error';
             alertPanel.style.display = 'block';
         } else if (totalOutliers > 0) {
-            alertPanel.innerHTML = `ℹ️ 提示：检测到 ${totalOutliers} 组平行孔存在离群风险 (n>2)。`;
+            alertPanel.innerHTML = translations[currentLanguage].replicateWarning(totalOutliers);
             alertPanel.className = 'alert-error';
             alertPanel.style.display = 'block';
         } else {
-            alertPanel.innerHTML = `✅ 验证通过：数据一致性良好或重复孔数量不足以判定离群。`;
+            alertPanel.innerHTML = translations[currentLanguage].validationPassed;
             alertPanel.className = 'alert-success';
             alertPanel.style.display = 'block';
         }
@@ -304,9 +373,9 @@
         tbody.innerHTML = finalStats.map(d => `
             <tr class="${d.isOutlier ? 'outlier-row' : ''}">
                 <td>${d.sample}</td>
-                <td>${d.gene} ${d.isRef ? '<span class="ref-tag">内参</span>' : ''}</td>
+                <td>${d.gene} ${d.isRef ? '<span class="ref-tag">' + translations[currentLanguage].referenceGene + '</span>' : ''}</td>
                 <td>${d.ctVals}</td>
-                <td>${d.ctSD.toFixed(3)} ${d.isOutlier ? '<span class="outlier-tag">变异大</span>' : ''}</td>
+                <td>${d.ctSD.toFixed(3)} ${d.isOutlier ? '<span class="outlier-tag">' + translations[currentLanguage].highVariation + '</span>' : ''}</td>
                 <td><b>${d.isRef ? '1.000' : d.fcMean.toFixed(3)}</b></td>
                 <td>${d.isRef ? '-' : d.fcSD.toFixed(3)}</td>
                 <td>${d.isRef ? '-' : d.pVal.toFixed(4)}</td>
