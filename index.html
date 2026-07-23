@@ -12,7 +12,21 @@
 </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>qRT-PCR 统计分析专家系统 v6.5</title>
+    <meta id="meta-description" name="description" content="免费的 qRT-PCR 数据分析工具，使用 2^-ΔΔCt 方法计算相对基因表达，支持多内参、Ct 标准差质控、t 检验和图表导出。">
+    <meta name="robots" content="index,follow">
+    <link id="canonical-url" rel="canonical" href="https://qpcr.unwedomain.xyz/">
+    <link rel="alternate" hreflang="zh-CN" href="https://qpcr.unwedomain.xyz/">
+    <link rel="alternate" hreflang="en" href="https://qpcr.unwedomain.xyz/?lang=en">
+    <link rel="alternate" hreflang="x-default" href="https://qpcr.unwedomain.xyz/">
+    <meta property="og:type" content="website">
+    <meta id="og-title" property="og:title" content="qRT-PCR 数据分析工具 | CyanHelix">
+    <meta id="og-description" property="og:description" content="基于 2^-ΔΔCt 的相对基因表达分析，支持多内参、质控和结果导出。">
+    <meta id="og-url" property="og:url" content="https://qpcr.unwedomain.xyz/">
+    <meta name="twitter:card" content="summary">
+    <title>qRT-PCR 数据分析工具 | 2^-ΔΔCt 相对表达计算</title>
+    <script type="application/ld+json">
+    {"@context":"https://schema.org","@type":"WebApplication","name":"qRT-PCR Relative Expression Analyzer","url":"https://qpcr.unwedomain.xyz/","applicationCategory":"ScienceApplication","operatingSystem":"Web","inLanguage":["zh-CN","en"],"description":"Browser-based qRT-PCR 2^-ΔΔCt relative gene expression analysis with multiple reference genes, quality checks, t-tests, and exportable charts."}
+    </script>
     <script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-error-bars@4.4.0/build/index.umd.min.js"></script>
@@ -143,7 +157,9 @@
             selectReferenceGenes: '请选择内参基因', referenceGene: '内参', highVariation: '变异大',
             refVariationWarning: (samples, threshold) => `⚠️ 警告：样本 [${samples}] 的内参变异大 (n>2, SD>${threshold})。`,
             replicateWarning: (count) => `ℹ️ 提示：检测到 ${count} 组平行孔存在离群风险 (n>2)。`, validationPassed: '✅ 验证通过：数据一致性良好或重复孔数量不足以判定离群。',
-            pageTitle: 'qRT-PCR 统计分析专家系统 v6.5'
+            pageTitle: 'qRT-PCR 数据分析工具 | 2^-ΔΔCt 相对表达计算',
+            metaDescription: '免费的 qRT-PCR 数据分析工具，使用 2^-ΔΔCt 方法计算相对基因表达，支持多内参、Ct 标准差质控、t 检验和图表导出。',
+            ogDescription: '基于 2^-ΔΔCt 的相对基因表达分析，支持多内参、质控和结果导出。'
         },
         en: {
             languageSelector: 'Language selector', title: '🧬 qRT-PCR Statistical Analysis System v6.5', subtitle: "Publication-ready plots · Student's t-test · Replicate-quality screening (n > 2)",
@@ -154,7 +170,9 @@
             selectReferenceGenes: 'Select at least one reference gene', referenceGene: 'Reference', highVariation: 'High variation',
             refVariationWarning: (samples, threshold) => `⚠️ Warning: reference-gene variation is high for sample(s) [${samples}] (n > 2, SD > ${threshold}).`,
             replicateWarning: (count) => `ℹ️ Notice: ${count} technical-replicate group(s) have a potential outlier risk (n > 2).`, validationPassed: '✅ Quality check passed: data are consistent, or there are insufficient replicates to assess outliers.',
-            pageTitle: 'qRT-PCR Statistical Analysis System v6.5'
+            pageTitle: 'qPCR 2^-ΔΔCt Calculator | Relative Gene Expression Analysis',
+            metaDescription: 'Free browser-based qPCR 2^-ΔΔCt calculator for relative gene expression analysis, with multiple reference genes, Ct quality checks, t-tests, and exportable charts.',
+            ogDescription: 'Calculate relative qPCR gene expression with 2^-ΔΔCt, multiple reference genes, quality checks, statistical testing, and exportable charts.'
         }
     };
     const languageStorageKey = 'qrt-pcr-language';
@@ -173,6 +191,15 @@
         const copy = translations[language];
         document.documentElement.lang = language === 'en' ? 'en' : 'zh-CN';
         document.title = copy.pageTitle;
+        document.getElementById('meta-description').content = copy.metaDescription;
+        document.getElementById('og-title').content = copy.pageTitle;
+        document.getElementById('og-description').content = copy.ogDescription;
+        document.getElementById('canonical-url').href = language === 'en'
+            ? 'https://qpcr.unwedomain.xyz/?lang=en'
+            : 'https://qpcr.unwedomain.xyz/';
+        document.getElementById('og-url').content = language === 'en'
+            ? 'https://qpcr.unwedomain.xyz/?lang=en'
+            : 'https://qpcr.unwedomain.xyz/';
         document.querySelectorAll('[data-i18n]').forEach(element => { if (copy[element.dataset.i18n]) element.textContent = copy[element.dataset.i18n]; });
         document.querySelectorAll('[data-i18n-aria-label]').forEach(element => { if (copy[element.dataset.i18nAriaLabel]) element.setAttribute('aria-label', copy[element.dataset.i18nAriaLabel]); });
         document.querySelectorAll('[data-language]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.language === language)));
